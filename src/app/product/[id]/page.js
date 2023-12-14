@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function ProductDetailPage({ params: { id } }) {
-  const product = data.products.find((i) => i.id === id);
+  const product = data.products.find((x) => x.id === id);
   if (!product) {
     return <div>Product Not Found</div>;
   }
