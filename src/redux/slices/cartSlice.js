@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 
-const initialState = {
-  loading: true,
-  cartItems: [],
-};
-
+const initialState = Cookies.get("cart")
+  ? { ...JSON.parse(Cookies.get("cart")), loading: true }
+  : {
+      loading: true,
+      cartItems: [],
+    };
 const addDecimals = (num) => {
   return (Math.round(num * 100) / 100).toFixed(2);
 };
@@ -28,7 +30,7 @@ const cartSlice = createSlice({
 
       state.itemsPrice = addDecimals(
         state.cartItems.reduce(
-          (acc, item) => acc + item.price * item.quantity,
+          (acc, item) => acc + item.price * item.qty,
           0
         )
       );
@@ -43,14 +45,36 @@ const cartSlice = createSlice({
         Number(state.shippingPrice) +
         Number(state.taxPrice)
       ).toFixed(2);
+
+      Cookies.set("cart", JSON.stringify(state));
     },
     removeFromCart: (state, action) => {
       const id = action.payload;
-      state.cartItems = state.cartItems.filter((i) => i.id !== id);
+      state.cartItems = state.cartItems.filter((i) => i.id !== action.payload);
+
+      state.itemsPrice = addDecimals(
+        state.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+      );
+
+      state.shippingPrice = addDecimals(state.itemsPrice > 100 ? 0 : 100);
+      state.taxPrice = addDecimals(
+        Number((0.15 * state.itemsPrice).toFixed(2))
+      );
+
+      state.totalPrice = (
+        Number(state.itemsPrice) +
+        Number(state.shippingPrice) +
+        Number(state.taxPrice)
+      ).toFixed(2);
+
+      Cookies.set("cart", JSON.stringify(state));
+    },
+    hideLoading: (state) => {
+      state.loading = false;
     },
   },
 });
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, hideLoading } = cartSlice.actions;
 
 export default cartSlice.reducer;
