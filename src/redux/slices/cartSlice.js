@@ -50,7 +50,7 @@ const cartSlice = createSlice({
     },
     removeFromCart: (state, action) => {
       const id = action.payload;
-      state.cartItems = state.cartItems.filter((i) => i.id !== action.payload);
+      state.cartItems = state.cartItems.filter((i) => i.id !== id);
 
       state.itemsPrice = addDecimals(
         state.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
