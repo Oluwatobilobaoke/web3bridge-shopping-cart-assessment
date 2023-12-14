@@ -105,6 +105,26 @@ export default function CartPage() {
                 </li>
               </ul>
             </div>
+            <div className="card p-5">
+              <ul>
+                <li>
+                  <div className="pb-3 text-xl">
+                    <label htmlFor="coupon">Coupon</label>
+                    <input
+                      type="text"
+                      id="coupon"
+                      name="coupon"
+                      className="w-full"
+                    />
+                  </div>
+                </li>
+                <li>
+                  <button className="primary-button w-full">
+                    Apply Coupon
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       )}
